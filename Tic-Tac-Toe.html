@@ -5,33 +5,81 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tic Tac Toe</title>
     <style>
-        
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        h1 {
+            text-align: center;
+            color: #007bff; /* Blue header color */
+        }
+
         #game-board {
             display: grid;
             grid-template-columns: repeat(3, 100px);
             grid-template-rows: repeat(3, 100px);
+            margin: 20px auto;
+            border: 3px solid #007bff; /* Blue border */
+            border-radius: 5px;
+            background-color: #fff; /* White background */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Shadow */
         }
 
         .cell {
             width: 100px;
             height: 100px;
-            border: 1px solid black;
+            border: 1px solid #ccc; /* Light gray border */
             display: flex;
             justify-content: center;
             align-items: center;
             font-size: 2em;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .cell:hover {
+            background-color: #f8f9fa; /* Light gray background on hover */
         }
 
         #message {
             margin-top: 20px;
+            text-align: center;
             font-weight: bold;
+            color: #007bff; /* Blue message color */
+            display: none; /* Hide message initially */
+        }
+
+        #message.show {
+            display: block; /* Show message when necessary */
+        }
+
+        .button-container {
+            text-align: center;
+            margin-top: 20px;
         }
 
         button {
-            margin-top: 10px;
+            margin: 0 10px;
+            padding: 10px 20px;
             font-size: 1em;
-            padding: 5px 10px;
+            border: none;
+            border-radius: 5px;
+            background-color: #007bff; /* Blue button background */
+            color: #fff; /* White button text */
             cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #0056b3; /* Darker blue on hover */
         }
     </style>
 </head>
@@ -39,12 +87,13 @@
     <h1>Tic Tac Toe</h1>
     <div id="game-board"></div>
     <div id="message"></div>
-    <button id="single-player">Single Player</button>
-    <button id="two-players">Two Players</button>
-    <button id="undo">Undo</button>
+    <div class="button-container">
+        <button id="single-player">Single Player</button>
+        <button id="two-players">Two Players</button>
+        <button id="undo">Undo</button>
+    </div>
 
     <script>
-        // JavaScript code for game logic and user interface
         const board = document.getElementById('game-board');
         const message = document.getElementById('message');
         const singlePlayerBtn = document.getElementById('single-player');
@@ -86,7 +135,11 @@
         function startGame() {
             currentPlayer = 'X';
             message.textContent = `Player ${currentPlayer}'s turn`;
-            cells.forEach(cell => cell.textContent = '');
+            message.classList.remove('show'); // Hide message
+            cells.forEach(cell => {
+                cell.textContent = '';
+                cell.style.pointerEvents = 'auto'; // Enable cell clicks
+            });
         }
 
         // Function to handle cell click
@@ -95,9 +148,12 @@
             if (cell.textContent === '' && !checkWinner()) {
                 cell.textContent = currentPlayer;
                 if (checkWinner()) {
-                    message.textContent = `Player ${currentPlayer} wins!`;
+                    message.textContent = `Player ${currentPlayer} wins! 🎉`;
+                    message.classList.add('show'); // Show message
+                    cells.forEach(cell => cell.style.pointerEvents = 'none'); // Disable further clicks
                 } else if (checkDraw()) {
                     message.textContent = "It's a draw!";
+                    message.classList.add('show'); // Show message
                 } else {
                     currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
                     message.textContent = `Player ${currentPlayer}'s turn`;
